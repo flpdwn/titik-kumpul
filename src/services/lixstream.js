@@ -26,10 +26,7 @@ export default async function lixStreamFileInfo(fid) {
     const fileId = fileInfo.id;
     const fileSize = fileInfo.size;
     const thumbnail = fileInfo.thumbnail;
-
-    const uidMatch = thumbnail.match(/xbox-streaming\/(\d+)/i);
-    if (!uidMatch) throw new Error('UID not found');
-    const uid = uidMatch[1];
+    const uid = resourceInfo.data.suid;
     let assetsUrl = `${API_BASE}/v2/s/assets/f?id=${fileId}&uid=${uid}`;
     const downloadUrlEncrypted = await axios.get(assetsUrl);
     if (!downloadUrlEncrypted.data?.url) {
@@ -39,8 +36,9 @@ export default async function lixStreamFileInfo(fid) {
     const decryptedUrl = decryptAes(encryptedUrl, AES_KEY, AES_IV);
     return {
       fileName: fileName,
-      fileSize: `${fileSize} bytes`,
+      fileSize: `${fileSize}`,
       downloadUrl: decryptedUrl,
+      thumbnail,
     };
   } catch (error) {
     throw error;

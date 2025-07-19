@@ -1,30 +1,17 @@
-import delay from 'delay';
-import lixStreamFileInfo from './src/service/lixstream.js';
-import fs from 'fs';
-import path from 'path';
-(async () => {
-  try {
-    const listUrl = fs
-      .readFileSync('list.txt', { encoding: 'utf-8' })
-      .replace(/\r/g, '')
-      .split('\n');
-    for (const url of listUrl) {
-      const fid = path.basename(url);
-      let data;
-      try {
-        data = await lixStreamFileInfo(fid);
-      } catch (error) {
-        console.log(error);
-        continue;
-      }
-      console.log({
-        url,
-        ...data,
-      });
+import { Command } from 'commander';
+import getLixStreamInfo from './src/utils/getLixStreamFileInfo.js';
+import singleDownload from './src/commands/singleDownload.js';
+const program = new Command();
 
-      await delay(1500);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-})();
+program.name('titik kumpul').description('cli to download titik kumpul ytta');
+
+program
+  .command('single')
+  .description(
+    'download from single url example url https://vide0.me/e/ToDZqO04'
+  )
+  .argument('<url>', 'url to download')
+  .action(async (str) => {
+    await singleDownload(str);
+  });
+program.parse();
