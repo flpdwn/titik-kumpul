@@ -9,5 +9,6 @@ export default async function singleDownload(str) {
     await nodeDownloader(data.downloadUrl, data.fileName, 'downloads');
   } catch (error) {
     console.log(error);
+    process.exit(0);
   }
 }

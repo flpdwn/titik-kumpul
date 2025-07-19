@@ -11,5 +11,5 @@ npm install
 running
 
 ```
-node index.js
+node cli
 ```
